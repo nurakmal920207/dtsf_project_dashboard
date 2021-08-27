@@ -10,6 +10,18 @@ import pandas as pd
 import plotly.graph_objects as go
 import matplotlib.pyplot as plt
 import json
+import base64
+
+@st.cache
+def get_table_download_link(df):
+    """Generates a link allowing the data in a given panda dataframe to be downloaded
+    in:  dataframe
+    out: href string
+    """
+    csv = df.to_csv(index=False)
+    b64 = base64.b64encode(csv.encode()).decode()  # some strings <-> bytes conversions necessary here
+    href = f'<a href="data:file/csv;base64,{b64}" download="data.csv">Download csv file</a>'
+    return href
 
 #Start of the app    
 st.title('DTSF Project Dashboard')
@@ -102,8 +114,7 @@ elif company_input == 'CIMA' and pwd_input == st.secrets[company_input]['pwd']: 
                     x = x[0]
                     st.write(x,' - ',y)
                 
-                
-                
+        st.markdown(get_table_download_link(df2), unsafe_allow_html=True)
     except:
         pass
                 
