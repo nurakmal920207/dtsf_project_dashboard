@@ -14,17 +14,6 @@ import base64
 import yagmail
 from PIL import Image
 
-@st.cache
-def get_table_download_link(df):
-    """Generates a link allowing the data in a given panda dataframe to be downloaded
-    in:  dataframe
-    out: href string
-    """
-    csv = df.to_csv(index=False)
-    b64 = base64.b64encode(csv.encode()).decode()  # some strings <-> bytes conversions necessary here
-    href = f'<a href="data:file/csv;base64,{b64}" download="data.csv">Download csv file</a>'
-    return href
-
 #Start of the app    
 c1, c2, c3 = st.beta_columns([1,4,1])
 with c1:
@@ -127,7 +116,7 @@ elif company_input == 'CIMA' and pwd_input == st.secrets[company_input]['pwd']: 
                         x = x[0]
                         st.write(x,' - ',y)
                 
-        st.markdown(get_table_download_link(df2), unsafe_allow_html=True)
+        
     except:
         pass
                 
