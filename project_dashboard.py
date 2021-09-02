@@ -34,7 +34,7 @@ company_input = st.text_input("Please provide your company name")
 pwd_input = st.text_input("Please enter your password", type = 'password')
     
 #Set up Vendor and Project list
-with open('data.json') as json_file:
+with open('vendor_data.json') as json_file:
     project_dict = json.load(json_file)
 
 today = pd.Timestamp.now().normalize()
