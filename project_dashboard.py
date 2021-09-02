@@ -177,3 +177,5 @@ elif pwd_input == st.secrets[company_input]['pwd']: #for Vendor
         st.write('Update successful')
     
     
+else:
+    st.write('Wrong Company Name or Password')
