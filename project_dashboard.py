@@ -13,6 +13,7 @@ import json
 import base64
 import yagmail
 from PIL import Image
+import os
 
 #Start of the app    
 c1, c2, c3 = st.beta_columns([1,4,1])
@@ -156,8 +157,11 @@ elif pwd_input == st.secrets[company_input]['pwd']: #for Vendor
 
     click_update = st.button('Update')
     if click_update: #user press Update button
-        df2.to_csv('%s_fact.csv' %(selected_project), index = False)
-        df3.to_csv('%s_last_submit.csv' %(selected_project), index = False)
+        df2.to_csv('%s_fact_.csv' %(selected_project), index = False)
+        df3.to_csv('%s_last_submit_.csv' %(selected_project), index = False)
+        
+        os.rename('%s_fact_.csv' %(selected_project), '%s_fact.csv' %(selected_project))
+        os.rename('%s_last_submit_.csv' %(selected_project), '%s_last_submit.csv' %(selected_project))
 
         receiver = "akmal.nordi@cima.com.my"
         body = "%s has been updated" %(selected_project)
