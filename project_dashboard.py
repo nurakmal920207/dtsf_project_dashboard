@@ -32,6 +32,9 @@ with c3:
 company_input = st.text_input("Please provide your company name")
 
 pwd_input = st.text_input("Please enter your password", type = 'password')
+
+if pwd_input != st.secrets[company_input]['pwd']:
+    st.write('Wrong Password')
     
 #Set up Vendor and Project list
 with open('vendor_data.json') as json_file:
@@ -176,6 +179,3 @@ elif pwd_input == st.secrets[company_input]['pwd']: #for Vendor
         )
         st.write('Update successful')
     
-    
-else:
-    st.write('Wrong Company Name or Password')
