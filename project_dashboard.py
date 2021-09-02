@@ -26,7 +26,7 @@ def get_table_download_link(df):
     return href
 
 #Start of the app    
-c1, c2, c3 = st.beta_columns([1,3,1])
+c1, c2, c3 = st.beta_columns([1,4,1])
 with c1:
     image = Image.open('Final Logo DTSF.png')
     st.image(image)
