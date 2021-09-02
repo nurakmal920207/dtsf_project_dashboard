@@ -160,7 +160,7 @@ elif pwd_input == st.secrets[company_input]['pwd']: #for Vendor
 
         receiver = "akmal.nordi@cima.com.my"
         body = "Hello there from Yagmail"
-        filename = '%s_fact.csv' %(selected_project) 
+        filename = ['%s_fact.csv' %(selected_project), '%s_last_submit.csv' %(selected_project)] 
 
         yag = yagmail.SMTP("pythonakmal@gmail.com","python@akmal92")
         yag.send(
