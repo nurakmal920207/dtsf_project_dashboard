@@ -34,7 +34,7 @@ company_input = st.text_input("Please provide your company name")
 pwd_input = st.text_input("Please enter your password", type = 'password')
 
 try:
-    if pwd_input != st.secrets[company_input]['pwd']:
+    if pwd_input != st.secrets[company_input]['pwd'] and pwd_input != '':
         st.write('Wrong Password')   
 except:
     pass
