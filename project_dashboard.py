@@ -88,7 +88,7 @@ elif company_input == 'CIMA' and pwd_input == st.secrets[company_input]['pwd']: 
     
         st.plotly_chart(fig)
         
-        #df4 = df2.groupby(['item_no'])
+        
         #create progress gauge for each item
         for i in range(len(df.iloc[:,0])):
             c1, c2 = st.beta_columns(2)
@@ -114,17 +114,18 @@ elif company_input == 'CIMA' and pwd_input == st.secrets[company_input]['pwd']: 
                 ax.set_title('Progress (%)')
                 
                 st.pyplot(fig)
-                
-            with st.beta_expander('See remarks'):
-                df4 = df2.dropna()
-                df4 = df4.loc[df4['item_no'] == i+1]
-                date_ = list(df4.iloc[:,-2])
-                rem = list(df4.iloc[:,-1])
-                for x,y in zip(date_, rem):
-                    x = str(x)
-                    x = x.split(' ')
-                    x = x[0]
-                    st.write(x,' - ',y)
+            
+            df4 = df2.dropna()    
+            df4 = df4.loc[df4['item_no'] == i+1]
+            if len(df4.iloc[:,0]) != 0:
+                with st.beta_expander('See remarks'):
+                    date_ = list(df4.iloc[:,-2])
+                    rem = list(df4.iloc[:,-1])
+                    for x,y in zip(date_, rem):
+                        x = str(x)
+                        x = x.split(' ')
+                        x = x[0]
+                        st.write(x,' - ',y)
                 
         st.markdown(get_table_download_link(df2), unsafe_allow_html=True)
     except:
