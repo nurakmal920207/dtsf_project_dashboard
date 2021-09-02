@@ -11,6 +11,7 @@ import plotly.graph_objects as go
 import matplotlib.pyplot as plt
 import json
 import base64
+import yagmail
 
 @st.cache
 def get_table_download_link(df):
@@ -156,6 +157,18 @@ elif pwd_input == st.secrets[company_input]['pwd']: #for Vendor
     if click_update: #user press Update button
         df2.to_csv('%s_fact.csv' %(selected_project), index = False)
         df3.to_csv('%s_last_submit.csv' %(selected_project), index = False)
+
+        receiver = "akmal.nordi@cima.com.my"
+        body = "Hello there from Yagmail"
+        filename = '%s_fact.csv' %(selected_project) 
+
+        yag = yagmail.SMTP("pythonakmal@gmail.com","python@akmal92")
+        yag.send(
+            to=receiver,
+            subject="Yagmail test with attachment",
+            contents=body, 
+            attachments=filename,
+        )
         st.write('Update successful')
     
     
