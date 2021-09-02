@@ -12,6 +12,7 @@ import matplotlib.pyplot as plt
 import json
 import base64
 import yagmail
+from PIL import Image
 
 @st.cache
 def get_table_download_link(df):
@@ -25,7 +26,17 @@ def get_table_download_link(df):
     return href
 
 #Start of the app    
-st.title('DTSF Project Dashboard')
+c1, c2, c3 = st.beta_columns([1,2,1])
+with c1:
+    image = Image.open('Final Logo DTSF.png')
+    st.image(image)
+    
+with c2:
+    st.title('DTSF Project Dashboard')
+    
+with c3:
+    image = Image.open('CIMA Logo.png')
+    st.image(image)
 
 #Get the name of company
 company_input = st.text_input("Please provide your company name")
@@ -159,13 +170,13 @@ elif pwd_input == st.secrets[company_input]['pwd']: #for Vendor
         df3.to_csv('%s_last_submit.csv' %(selected_project), index = False)
 
         receiver = "akmal.nordi@cima.com.my"
-        body = "Hello there from Yagmail"
+        body = "%s has been updated" %(selected_project)
         filename = ['%s_fact.csv' %(selected_project), '%s_last_submit.csv' %(selected_project)] 
 
-        yag = yagmail.SMTP("pythonakmal@gmail.com","python@akmal92")
+        yag = yagmail.SMTP("pythonakmal@gmail.com",st.secrets['email']['pwd'])
         yag.send(
             to=receiver,
-            subject="Yagmail test with attachment",
+            subject="DTSF Project Dashboard",
             contents=body, 
             attachments=filename,
         )
