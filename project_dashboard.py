@@ -37,7 +37,7 @@ try:
     if pwd_input != st.secrets[company_input]['pwd'] and pwd_input != '':
         st.write('Wrong Password')   
 except:
-    pass
+    st.write('Wrong company name')
     
 #Set up Vendor and Project list
 with open('vendor_data.json') as json_file:
