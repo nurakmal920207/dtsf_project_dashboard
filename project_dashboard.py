@@ -33,8 +33,11 @@ company_input = st.text_input("Please provide your company name")
 
 pwd_input = st.text_input("Please enter your password", type = 'password')
 
-if pwd_input != st.secrets[company_input]['pwd']:
-    st.write('Wrong Password')
+try:
+    if pwd_input != st.secrets[company_input]['pwd']:
+        st.write('Wrong Password')   
+except:
+    pass
     
 #Set up Vendor and Project list
 with open('vendor_data.json') as json_file:
