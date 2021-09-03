@@ -10,7 +10,6 @@ import pandas as pd
 import plotly.graph_objects as go
 import matplotlib.pyplot as plt
 import json
-import base64
 import yagmail
 from PIL import Image
 import os
@@ -39,6 +38,7 @@ try:
 except:
     if pwd_input != '':
         st.write('Wrong company name')
+        pwd_input = ''
     
 #Set up Vendor and Project list
 with open('vendor_data.json') as json_file:
