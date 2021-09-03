@@ -78,7 +78,7 @@ elif company_input == 'CIMA' and pwd_input == st.secrets[company_input]['pwd']: 
             domain = {'x': [0, 1], 'y': [0, 1]},
             title = {'text': "Overall Progress"},
             gauge = {'axis': {'range': [None, 100]},
-                     'bar': {'color': "darkblue"},
+                     'bar': {'color': "#146C9C"},
                      'steps' : [{'range': [0, 100], 'color': "lightgray"}],
                      'threshold' : {'line': {'color': "red", 'width': 4}, 'thickness': 0.75, 'value': avg_exp_progress}}))
 
@@ -102,7 +102,7 @@ elif company_input == 'CIMA' and pwd_input == st.secrets[company_input]['pwd']: 
                 target = df.iloc[i,-1]
                 fig, ax = plt.subplots()
                 fig.set_size_inches(10, 1)
-                ax.barh([0], df3.iloc[i,1], align='center', color = 'darkblue')
+                ax.barh([0], df3.iloc[i,1], align='center', color = '#146C9C')
                 ax.plot([target, target], [-0.5,0.5], "red")
                 ax.get_yaxis().set_visible(False)
                 plt.xlim([0,100])
