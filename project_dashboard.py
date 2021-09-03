@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 """
-Created on Thu Aug 26 09:41:50 2021
-
-@author: akmal.nordi
+This app is created as an interface to enable vendor to update the progress of DTSF project
+and for CIMA personnel to get fast update on the progress through the dashboard
 """
 
 import streamlit as st
@@ -14,15 +13,15 @@ import yagmail
 from PIL import Image
 import os
 
-#Start of the app    
+#Start of the app
 c1, c2, c3 = st.beta_columns([1,4,1])
 with c1:
     image = Image.open('Final Logo DTSF.png')
     st.image(image)
-    
+
 with c2:
     st.title('DTSF PROJECT PROGRESS')
-    
+
 with c3:
     image = Image.open('CIMA Logo.png')
     st.image(image)
@@ -34,12 +33,12 @@ pwd_input = st.text_input("Please enter your password", type = 'password')
 
 try:
     if pwd_input != st.secrets[company_input]['pwd'] and pwd_input != '':
-        st.write('Wrong Password')   
+        st.write('Wrong Password')
 except:
     if pwd_input != '':
         st.write('Wrong company name')
         pwd_input = ''
-    
+
 #Set up Vendor and Project list
 with open('vendor_data.json') as json_file:
     project_dict = json.load(json_file)
@@ -70,7 +69,7 @@ elif company_input == 'CIMA' and pwd_input == st.secrets[company_input]['pwd']: 
         df.loc[df.exp_progress < 0, 'exp_progress'] = 0
         avg_exp_progress = df.exp_progress.mean() #average expected progress
         avg_curr_progress = df3.curr_progress.mean() #average current progress
-        
+
         #Create overall progress gauge
         fig = go.Figure(go.Indicator(
             mode = "gauge+number",
@@ -82,17 +81,17 @@ elif company_input == 'CIMA' and pwd_input == st.secrets[company_input]['pwd']: 
                      'bar': {'color': "darkblue"},
                      'steps' : [{'range': [0, 100], 'color': "lightgray"}],
                      'threshold' : {'line': {'color': "red", 'width': 4}, 'thickness': 0.75, 'value': avg_exp_progress}}))
-    
+
         st.plotly_chart(fig)
-        
-        
+
+
         #create progress gauge for each item
         for i in range(len(df.iloc[:,0])):
             c1, c2 = st.beta_columns(2)
             with c1:
                 st.write("####")
                 st.write(df.iloc[i,1])
-    
+
             with c2:
                 if df3.iloc[i,1] >50:
                     x_coord = df3.iloc[i,1]-10
@@ -109,10 +108,10 @@ elif company_input == 'CIMA' and pwd_input == st.secrets[company_input]['pwd']: 
                 plt.xlim([0,100])
                 ax.annotate('%s%%' %(str(df3.iloc[i,1])), (x_coord,-0.1), size = 20, color = color_)
                 ax.set_title('Progress (%)')
-                
+
                 st.pyplot(fig)
-            
-            df4 = df2.dropna()    
+
+            df4 = df2.dropna()
             df4 = df4.loc[df4['item_no'] == i+1]
             if len(df4.iloc[:,0]) != 0:
                 with st.beta_expander('See remarks'):
@@ -123,11 +122,11 @@ elif company_input == 'CIMA' and pwd_input == st.secrets[company_input]['pwd']: 
                         x = x.split(' ')
                         x = x[0]
                         st.write(x,' - ',y)
-                
-        
+
+
     except:
         pass
-                
+
 
 elif pwd_input == st.secrets[company_input]['pwd']: #for Vendor
     project_list = project_dict[company_input] #get project list for selected vendor
@@ -145,7 +144,7 @@ elif pwd_input == st.secrets[company_input]['pwd']: #for Vendor
     #create empty list for progress and remarks
     prog = []
     remarks = []
-    
+
     for i in range(len(df.iloc[:,0])):
         c1, c2 ,c3= st.beta_columns([3,1.5,1.5])
         with c1: #list items
@@ -155,31 +154,30 @@ elif pwd_input == st.secrets[company_input]['pwd']: #for Vendor
         with c2: #input progress
             last_value = df3.iloc[i,1]
             prog.append(st.number_input("Progress (%)",min_value=0, max_value=100, value=last_value, step=1, key=str(i)))
-            
+
         with c3: #input remarks
             remarks.append(st.text_input('Remarks', key=str((i+1)*10)))
     df3 = pd.DataFrame({'item_no':df.iloc[:,0], 'curr_progress':prog, 'date':[today]*len(df.iloc[:,0]), 'remarks':remarks})
     df2 = df2.append(df3, ignore_index = True)
-    
+
 
     click_update = st.button('Update')
     if click_update: #user press Update button
         df2.to_csv('%s_fact_.csv' %(selected_project), index = False)
         df3.to_csv('%s_last_submit_.csv' %(selected_project), index = False)
-        
+
         os.rename('%s_fact_.csv' %(selected_project), '%s_fact.csv' %(selected_project))
         os.rename('%s_last_submit_.csv' %(selected_project), '%s_last_submit.csv' %(selected_project))
 
         receiver = "akmal.nordi@cima.com.my"
         body = "%s has been updated" %(selected_project)
-        filename = ['%s_fact.csv' %(selected_project), '%s_last_submit.csv' %(selected_project)] 
+        filename = ['%s_fact.csv' %(selected_project), '%s_last_submit.csv' %(selected_project)]
 
         yag = yagmail.SMTP("pythonakmal@gmail.com",st.secrets['email']['pwd'])
         yag.send(
             to=receiver,
             subject="DTSF Project Dashboard",
-            contents=body, 
+            contents=body,
             attachments=filename,
         )
         st.write('Update successful')
-    
