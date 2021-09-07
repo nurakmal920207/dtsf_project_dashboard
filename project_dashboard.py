@@ -46,9 +46,6 @@ with open('vendor_data.json') as json_file:
 
 today = pd.Timestamp.now().normalize()
 
-#separation line
-st.markdown("""---""")
-
 if company_input == '' or pwd_input == '': #blank input
     pass
 
