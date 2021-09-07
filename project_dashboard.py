@@ -27,9 +27,10 @@ with c3:
     st.image(image)
 
 #Get the name of company
-company_input = st.text_input("Please provide your company name")
-
-pwd_input = st.text_input("Please enter your password", type = 'password')
+with st.form(key='my_form'):
+    company_input = st.text_input("Please provide your company name")
+    pwd_input = st.text_input("Please enter your password", type = 'password')
+    submit_button = st.form_submit_button(label='Submit')
 
 try:
     if pwd_input != st.secrets[company_input]['pwd'] and pwd_input != '':
