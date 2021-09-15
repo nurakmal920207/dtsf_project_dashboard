@@ -120,7 +120,7 @@ elif company_input == 'CIMA' and pwd_input == st.secrets[company_input]['pwd']: 
                 if df3.iloc[i,-1].days > 0:
                     ax.set_title('%s days ahead' %(str(df3.loc[i,'days'].days)))
                 elif df3.iloc[i,-1].days < 0:
-                    ax.set_title('%s days late' %(str(df3.loc[i,'days'].days)))
+                    ax.set_title('%s days late' %(str(df3.loc[i,'days'].days*-1)))
                 else:
                     ax.set_title('On time')
 
