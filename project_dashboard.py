@@ -75,8 +75,8 @@ elif company_input == 'CIMA' and pwd_input == st.secrets[company_input]['pwd']: 
         df3['weighted_curr_progress'] = df3.curr_progress * df.weightage
         avg_curr_progress = df3.weighted_curr_progress.sum() #average current progress
         
-        df3['actual_day'] = df3.curr_progress * (df.end_date.days - df.start_date.days) / 100
-        df3['expected_day'] = df.exp_progress * (df.end_date.days - df.start_date.days) / 100
+        df3['actual_day'] = df3.curr_progress * (df.end_date - df.start_date) / 100
+        df3['expected_day'] = df.exp_progress * (df.end_date - df.start_date) / 100
         df3['days'] = df3.actual_day - df3.expected_day #calculate how many days ahead or late
         
 
@@ -117,10 +117,10 @@ elif company_input == 'CIMA' and pwd_input == st.secrets[company_input]['pwd']: 
                 ax.get_yaxis().set_visible(False)
                 plt.xlim([0,100])
                 ax.annotate('%s%%' %(str(df3.iloc[i,1])), (x_coord,-0.1), size = 20, color = color_)
-                if df3.iloc[i,-1] > 0:
-                    ax.set_title('%s days ahead' %(str(df3.iloc[i,-1])))
-                elif df3.iloc[i,-1] < 0:
-                    ax.set_title('%s days late' %(str(df3.iloc[i,-1])))
+                if df3.iloc[i,-1].days > 0:
+                    ax.set_title('%s days ahead' %(str(df3.iloc[i,-1].days)))
+                elif df3.iloc[i,-1].days < 0:
+                    ax.set_title('%s days late' %(str(df3.iloc[i,-1].days)))
                 else:
                     ax.set_title('On time')
 
