@@ -78,7 +78,12 @@ elif company_input == 'CIMA' and pwd_input == st.secrets[company_input]['pwd']: 
         df3['actual_day'] = df3.curr_progress * (df.end_date - df.start_date) / 100
         df3['expected_day'] = df.exp_progress * (df.end_date - df.start_date) / 100
         df3['days'] = df3.actual_day - df3.expected_day #calculate how many days ahead or late
-        
+        if df3.days.min().days < 0:
+            text = 'Overall Progress - %s days late' %(df3.days.min().days*-1)
+        elif df3.days.min().days > 0:
+            text = 'Overall Progress - %s days late' %(df3.days.max().days)
+        else:
+            text = 'Overall Progress - On time'
 
         #Create overall progress gauge
         fig = go.Figure(go.Indicator(
@@ -86,7 +91,7 @@ elif company_input == 'CIMA' and pwd_input == st.secrets[company_input]['pwd']: 
             value = avg_curr_progress,
             number = { 'suffix' : "%" },
             domain = {'x': [0, 1], 'y': [0, 1]},
-            title = {'text': "Overall Progress"},
+            title = {'text': "Overall Progress", 'color':'red'},
             gauge = {'axis': {'range': [None, 100]},
                      'bar': {'color': "#146C9C"},
                      'steps' : [{'range': [0, 100], 'color': "lightgray"}],
