@@ -97,6 +97,8 @@ elif company_input == 'CIMA' and pwd_input == st.secrets[company_input]['pwd']: 
                      'steps' : [{'range': [0, 100], 'color': "lightgray"}],
                      'threshold' : {'line': {'color': "red", 'width': 4}, 'thickness': 0.75, 'value': avg_exp_progress}}))
 
+        fig.update_layout(font=dict(family="Courier New, monospace",size=18,color="red"))
+        
         st.plotly_chart(fig)
 
 
