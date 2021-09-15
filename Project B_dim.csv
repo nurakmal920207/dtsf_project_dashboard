@@ -1,5 +1,5 @@
-item_no,description,start_date,end_date
-1,Finalise user requirement,25/7/2021,25/10/2021
-2,Complete the software,20/8/2021,25/10/2021
-3,Test and deploy,25/10/2021,25/12/2021
-4,Maintain the software,26/12/2021,26/12/2022
+item_no,description,start_date,end_date,weightage
+1,Finalise user requirement,25/7/2021,25/10/2021,0.1
+2,Complete the software,20/8/2021,25/10/2021,0.5
+3,Test and deploy,25/10/2021,25/12/2021,0.2
+4,Maintain the software,26/12/2021,26/12/2022,0.2
