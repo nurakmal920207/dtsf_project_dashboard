@@ -109,7 +109,7 @@ elif company_input == 'CIMA' and pwd_input == st.secrets[company_input]['pwd']: 
                 else:
                     x_coord = df3.iloc[i,1]+2
                     color_ = 'black'
-                target = df.iloc[i,-1]
+                target = df.loc[i,'exp_progress']
                 fig, ax = plt.subplots()
                 fig.set_size_inches(10, 1)
                 ax.barh([0], df3.iloc[i,1], align='center', color = '#146C9C')
