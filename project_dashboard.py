@@ -74,6 +74,11 @@ elif company_input == 'CIMA' and pwd_input == st.secrets[company_input]['pwd']: 
         
         df3['weighted_curr_progress'] = df3.curr_progress * df.weightage
         avg_curr_progress = df3.weighted_curr_progress.sum() #average current progress
+        
+        df3['actual_day'] = df3.curr_progress * (df.end_date - df.start_date) / 100
+        df3['expected_day'] = df3.exp_progress * (df.end_date - df.start_date) / 100
+        df3['days'] = df3.actual_day - df3.expected_day #calculate how many days ahead or late
+        
 
         #Create overall progress gauge
         fig = go.Figure(go.Indicator(
@@ -112,7 +117,7 @@ elif company_input == 'CIMA' and pwd_input == st.secrets[company_input]['pwd']: 
                 ax.get_yaxis().set_visible(False)
                 plt.xlim([0,100])
                 ax.annotate('%s%%' %(str(df3.iloc[i,1])), (x_coord,-0.1), size = 20, color = color_)
-                ax.set_title('Progress (%)')
+                ax.set_title('%s days ahead' %(str(df3.iloc[i,-1])))
 
                 st.pyplot(fig)
 
