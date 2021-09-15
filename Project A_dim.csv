@@ -1,4 +1,4 @@
-item_no,description,start_date,end_date
-1,item1,25/7/2021,25/10/2021
-2,item2,20/8/2021,25/10/2021
-3,item3,25/10/2021,25/12/2021
+item_no,description,start_date,end_date,weightage
+1,item1,25/7/2021,25/10/2021,0.2
+2,item2,20/8/2021,25/10/2021,0.4
+3,item3,25/10/2021,25/12/2021,0.4

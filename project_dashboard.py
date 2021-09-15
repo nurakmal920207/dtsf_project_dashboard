@@ -68,8 +68,12 @@ elif company_input == 'CIMA' and pwd_input == st.secrets[company_input]['pwd']: 
         df['exp_progress'] = (today - df['start_date'])/(df['end_date']-df['start_date']) * 100
         #set expected progress to zero if start date not yet start
         df.loc[df.exp_progress < 0, 'exp_progress'] = 0
-        avg_exp_progress = df.exp_progress.mean() #average expected progress
-        avg_curr_progress = df3.curr_progress.mean() #average current progress
+        
+        df['weighted_exp_progress'] = df.exp_progress * df.weightage
+        avg_exp_progress = df.weighted_exp_progress.sum() #average expected progress
+        
+        df3['weighted_curr_progress'] = df3.curr_progress * df.weightage
+        avg_curr_progress = df3.weighted_curr_progress.sum() #average current progress
 
         #Create overall progress gauge
         fig = go.Figure(go.Indicator(
