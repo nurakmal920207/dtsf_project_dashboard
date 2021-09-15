@@ -79,7 +79,7 @@ elif company_input == 'CIMA' and pwd_input == st.secrets[company_input]['pwd']: 
         df3['expected_day'] = df.exp_progress * (df.end_date - df.start_date) / 100
         df3['days'] = df3.actual_day - df3.expected_day #calculate how many days ahead or late
         df3['weighted_days'] = df3.days * df.weightage
-        mean_weighted_days = df3.weighted_days.mean().days
+        mean_weighted_days = df3.weighted_days.sum().days
         if mean_weighted_days < 0:
             text = 'Overall Progress - %s days late' %(mean_weighted_days*-1)
             color = "red"
