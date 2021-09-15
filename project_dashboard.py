@@ -78,6 +78,7 @@ elif company_input == 'CIMA' and pwd_input == st.secrets[company_input]['pwd']: 
         df3['actual_day'] = df3.curr_progress * (df.end_date - df.start_date) / 100
         df3['expected_day'] = df3.exp_progress * (df.end_date - df.start_date) / 100
         df3['days'] = df3.actual_day - df3.expected_day #calculate how many days ahead or late
+        st.write(df3)
         
 
         #Create overall progress gauge
