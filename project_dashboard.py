@@ -118,9 +118,9 @@ elif company_input == 'CIMA' and pwd_input == st.secrets[company_input]['pwd']: 
                 plt.xlim([0,100])
                 ax.annotate('%s%%' %(str(df3.iloc[i,1])), (x_coord,-0.1), size = 20, color = color_)
                 if df3.iloc[i,-1].days > 0:
-                    ax.set_title('%s days ahead' %(str(df3.iloc[i,-1])).days)
+                    ax.set_title('%s days ahead' %(str(df3.iloc[i,-1].days))
                 elif df3.iloc[i,-1].days < 0:
-                    ax.set_title('%s days late' %(str(df3.iloc[i,-1])).days)
+                    ax.set_title('%s days late' %(str(df3.iloc[i,-1].days))
                 else:
                     ax.set_title('On time')
 
