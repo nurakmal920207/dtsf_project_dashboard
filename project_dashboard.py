@@ -78,12 +78,15 @@ elif company_input == 'CIMA' and pwd_input == st.secrets[company_input]['pwd']: 
         df3['actual_day'] = df3.curr_progress * (df.end_date - df.start_date) / 100
         df3['expected_day'] = df.exp_progress * (df.end_date - df.start_date) / 100
         df3['days'] = df3.actual_day - df3.expected_day #calculate how many days ahead or late
-        # if df3.days.min().days < 0:
-        #     text = 'Overall Progress - %s days late' %(df3.days.min().days*-1)
-        # elif df3.days.min().days > 0:
-        #     text = 'Overall Progress - %s days late' %(df3.days.max().days)
-        # else:
-        #     text = 'Overall Progress - On time'
+        if df3.days.min().days < 0:
+            text = 'Overall Progress - %s days late' %(df3.days.min().days*-1)
+            color = "red"
+        elif df3.days.min().days > 0:
+            text = 'Overall Progress - %s days ahead' %(df3.days.min().days)
+            color = "green"
+        else:
+            text = 'Overall Progress - On time'
+            color = 'black'
 
         #Create overall progress gauge
         fig = go.Figure(go.Indicator(
@@ -95,9 +98,9 @@ elif company_input == 'CIMA' and pwd_input == st.secrets[company_input]['pwd']: 
             gauge = {'axis': {'range': [None, 100]},
                      'bar': {'color': "#146C9C"},
                      'steps' : [{'range': [0, 100], 'color': "lightgray"}],
-                     'threshold' : {'line': {'color': "red", 'width': 4}, 'thickness': 0.75, 'value': avg_exp_progress}}))
+                     'threshold' : {'line': {'color': color, 'width': 4}, 'thickness': 0.75, 'value': avg_exp_progress}}))
 
-        fig.update_layout(font=dict(family="Courier New, monospace",size=18,color="red"))
+        fig.update_layout(font=dict(color=color))
         
         st.plotly_chart(fig)
 
