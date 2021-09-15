@@ -117,7 +117,12 @@ elif company_input == 'CIMA' and pwd_input == st.secrets[company_input]['pwd']: 
                 ax.get_yaxis().set_visible(False)
                 plt.xlim([0,100])
                 ax.annotate('%s%%' %(str(df3.iloc[i,1])), (x_coord,-0.1), size = 20, color = color_)
-                ax.set_title('%s days ahead' %(str(df3.iloc[i,-1])).split(' ')[0])
+                if df3.iloc[i,-1] > 0:
+                    ax.set_title('%s days ahead' %(str(df3.iloc[i,-1])).split(' ')[0])
+                elif df3.iloc[i,-1] < 0:
+                    ax.set_title('%s days late' %(str(df3.iloc[i,-1])).split(' ')[0])
+                else:
+                    ax.set_title('On time')
 
                 st.pyplot(fig)
 
