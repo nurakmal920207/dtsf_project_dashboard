@@ -58,7 +58,7 @@ elif company_input == 'CIMA' and pwd_input == st.secrets[company_input]['pwd']: 
     try:
         df2 = pd.read_csv('%s_fact.csv' %(selected_project))
     except:
-        st.write('Project not started yet')
+        st.write('Project not yet started')
     try:
         df3 = pd.read_csv('%s_last_submit.csv' %(selected_project))
         #change date columns datatype to datetime
@@ -125,15 +125,17 @@ elif company_input == 'CIMA' and pwd_input == st.secrets[company_input]['pwd']: 
                 fig, ax = plt.subplots()
                 fig.set_size_inches(10, 1)
                 ax.barh([0], df3.iloc[i,1], align='center', color = '#146C9C')
-                ax.plot([target, target], [-0.5,0.5], "red")
                 ax.get_yaxis().set_visible(False)
                 plt.xlim([0,100])
                 ax.annotate('%s%%' %(str(df3.iloc[i,1])), (x_coord,-0.1), size = 20, color = color_)
                 if df3.iloc[i,-1].days > 0:
+                    ax.plot([target, target], [-0.5,0.5], "green")
                     ax.set_title('%s days ahead' %(str(df3.loc[i,'days'].days)), fontsize=18, color='green')
                 elif df3.iloc[i,-1].days < 0:
+                    ax.plot([target, target], [-0.5,0.5], "red")
                     ax.set_title('%s days late' %(str(df3.loc[i,'days'].days*-1)), fontsize=18, color='red')
                 else:
+                    ax.plot([target, target], [-0.5,0.5], "black")
                     ax.set_title('On time', fontsize=18)
 
                 st.pyplot(fig)
