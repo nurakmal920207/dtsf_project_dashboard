@@ -4,3 +4,4 @@ plotly==5.1.0
 matplotlib==3.3.4
 yagmail==0.14.260
 gspread==4.0.1
+gspread_dataframe
