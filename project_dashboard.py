@@ -11,7 +11,8 @@ import matplotlib.pyplot as plt
 import json
 import yagmail
 from PIL import Image
-import os
+import gspread
+from gspread_dataframe import get_as_dataframe, set_with_dataframe
 
 #Start of the app
 c1, c2, c3 = st.beta_columns([1,4,1])
@@ -46,6 +47,21 @@ with open('vendor_data.json') as json_file:
 
 today = pd.Timestamp.now().normalize()
 
+# Create a connection object.
+cr_list = ['type',
+            'project_id',
+            'private_key_id',
+            'private_key',
+            'client_email',
+            'client_id',
+            'auth_uri',
+            'token_uri',
+            'auth_provider_x509_cert_url',
+            'client_x509_cert_url']
+
+credentials = { x : st.secrets['cred'][x] for x in cr_list}
+gc = gspread.service_account_from_dict(credentials)
+
 if company_input == '' or pwd_input == '': #blank input
     pass
 
@@ -54,13 +70,20 @@ elif company_input == 'CIMA' and pwd_input == st.secrets[company_input]['pwd']: 
     project_list = [ item for elem in project_list for item in elem] #unpack list of list
     selected_project = st.selectbox('Please select your project', project_list) #user select project
     #read data
-    df = pd.read_csv('%s_dim.csv' %(selected_project))
+    sh = gc.open(selected_project)
+    df = get_as_dataframe(sh.worksheet('dimension'))
+    df.dropna(axis=1, how='all', inplace=True)
+    df.dropna(how='all', inplace=True)
     try:
-        df2 = pd.read_csv('%s_fact.csv' %(selected_project))
+        df2 = get_as_dataframe(sh.worksheet('fact'))
+        df2.dropna(axis=1, how='all', inplace=True)
+        df2.dropna(how='all', inplace=True)
     except:
         st.write('Project not yet started')
     try:
-        df3 = pd.read_csv('%s_last_submit.csv' %(selected_project))
+        df3 = get_as_dataframe(sh.worksheet('last_submit'))
+        df3.dropna(axis=1, how='all', inplace=True)
+        df3.dropna(how='all', inplace=True)
         #change date columns datatype to datetime
         df['start_date'] = pd.to_datetime(df['start_date'])
         df['end_date'] = pd.to_datetime(df['end_date'])
@@ -161,13 +184,20 @@ elif pwd_input == st.secrets[company_input]['pwd']: #for Vendor
     project_list = project_dict[company_input] #get project list for selected vendor
     selected_project = st.selectbox('Please select your project', project_list) #user select project
     #read data
-    df = pd.read_csv('%s_dim.csv' %(selected_project))
+    sh = gc.open(selected_project)
+    df = get_as_dataframe(sh.worksheet('dimension'))
+    df.dropna(axis=1, how='all', inplace=True)
+    df.dropna(how='all', inplace=True)
     try:
-        df2 = pd.read_csv('%s_fact.csv' %(selected_project))
+        df2 = get_as_dataframe(sh.worksheet('fact'))
+        df2.dropna(axis=1, how='all', inplace=True)
+        df2.dropna(how='all', inplace=True)
     except:
         df2 = pd.DataFrame({'item_no':df.iloc[:,0], 'curr_progress':[0]*len(df.iloc[:,0]), 'date':[today]*len(df.iloc[:,0]), 'remarks':['']*len(df.iloc[:,0])})
     try:
-        df3 = pd.read_csv('%s_last_submit.csv' %(selected_project))
+        df3 = get_as_dataframe(sh.worksheet('last_submit'))
+        df3.dropna(axis=1, how='all', inplace=True)
+        df3.dropna(how='all', inplace=True)
     except:
         df3 = pd.DataFrame({'item_no':df.iloc[:,0], 'curr_progress':[0]*len(df.iloc[:,0]), 'date':[today]*len(df.iloc[:,0]), 'remarks':['']*len(df.iloc[:,0])})
     #create empty list for progress and remarks
@@ -181,7 +211,7 @@ elif pwd_input == st.secrets[company_input]['pwd']: #for Vendor
             st.write(df.iloc[i,1])
 
         with c2: #input progress
-            last_value = df3.iloc[i,1]
+            last_value = df3.iloc[i,1].astype('int')
             prog.append(st.number_input("Progress (%)",min_value=0, max_value=100, value=last_value, step=1, key=str(i)))
 
         with c3: #input remarks
@@ -192,21 +222,25 @@ elif pwd_input == st.secrets[company_input]['pwd']: #for Vendor
 
     click_update = st.button('Update')
     if click_update: #user press Update button
-        df2.to_csv('%s_fact_.csv' %(selected_project), index = False)
-        df3.to_csv('%s_last_submit_.csv' %(selected_project), index = False)
-
-        os.rename('%s_fact_.csv' %(selected_project), '%s_fact.csv' %(selected_project))
-        os.rename('%s_last_submit_.csv' %(selected_project), '%s_last_submit.csv' %(selected_project))
+        try:
+            set_with_dataframe(sh.worksheet('fact'), df2)
+        except:
+            sh.add_worksheet(title="fact", rows="10", cols="10")
+            set_with_dataframe(sh.worksheet('fact'), df2)
+        
+        try:
+            set_with_dataframe(sh.worksheet('last_submit'), df3)
+        except:
+            sh.add_worksheet(title="last_submit", rows="10", cols="10")
+            set_with_dataframe(sh.worksheet('last_submit'), df3)
 
         receiver = "akmal.nordi@cima.com.my"
         body = "%s has been updated" %(selected_project)
-        filename = ['%s_fact.csv' %(selected_project), '%s_last_submit.csv' %(selected_project)]
 
         yag = yagmail.SMTP("pythonakmal@gmail.com",st.secrets['email']['pwd'])
         yag.send(
             to=receiver,
             subject="DTSF Project Dashboard",
             contents=body,
-            attachments=filename,
         )
         st.write('Update successful')
