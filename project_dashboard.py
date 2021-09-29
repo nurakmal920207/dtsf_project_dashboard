@@ -21,7 +21,7 @@ with c1:
     st.image(image)
 
 with c2:
-    st.title('DTSF PROJECT PROGRE')
+    st.title('DTSF PROJECT PROGRESS')
 
 with c3:
     image = Image.open('CIMA Logo.png')
