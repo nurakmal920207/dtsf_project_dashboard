@@ -203,25 +203,27 @@ elif pwd_input == st.secrets[company_input]['pwd']: #for Vendor
     #create empty list for progress and remarks
     prog = []
     remarks = []
+    
+    with st.form(key='vendor_form'):
 
-    for i in range(len(df.iloc[:,0])):
-        c1, c2 ,c3= st.beta_columns([3,1.5,1.5])
-        with c1: #list items
-            st.write("##")
-            st.write(df.iloc[i,1])
+        for i in range(len(df.iloc[:,0])):
+            c1, c2 ,c3= st.beta_columns([3,1.5,1.5])
+            with c1: #list items
+                st.write("##")
+                st.write(df.iloc[i,1])
+    
+            with c2: #input progress
+                last_value = df3.iloc[i,1].astype('int')
+                prog.append(st.number_input("Progress (%)",min_value=0, max_value=100, value=last_value, step=1, key=str(i)))
+    
+            with c3: #input remarks
+                remarks.append(st.text_input('Remarks', key=str((i+1)*10)))
+        df3 = pd.DataFrame({'item_no':df.iloc[:,0], 'curr_progress':prog, 'date':[today]*len(df.iloc[:,0]), 'remarks':remarks})
+        df2 = df2.append(df3, ignore_index = True)
+        
+        update_button = st.form_submit_button(label='Update')
 
-        with c2: #input progress
-            last_value = df3.iloc[i,1].astype('int')
-            prog.append(st.number_input("Progress (%)",min_value=0, max_value=100, value=last_value, step=1, key=str(i)))
-
-        with c3: #input remarks
-            remarks.append(st.text_input('Remarks', key=str((i+1)*10)))
-    df3 = pd.DataFrame({'item_no':df.iloc[:,0], 'curr_progress':prog, 'date':[today]*len(df.iloc[:,0]), 'remarks':remarks})
-    df2 = df2.append(df3, ignore_index = True)
-
-
-    click_update = st.button('Update')
-    if click_update: #user press Update button
+    if update_button: #user press Update button
         try:
             set_with_dataframe(sh.worksheet('fact'), df2)
         except:
